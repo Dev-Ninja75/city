@@ -108,6 +108,24 @@ const cities = [
 
 // console.log(cities);
 
+citiesModel
+  .create(cities)
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+console.log(cities);
+
+citiesModel.aggregate().group({
+  _id: "$department",
+  totalDepartment: { $sum: "$population" },
+});
+
+console.log();
+
 mongoose.connect("mongodb://localhost:27017/city", (error) => {
   if (error) {
     console.error(error); // Afficher l'erreur de MongoDB en cas de problème

@@ -2,7 +2,7 @@
   "name": "city",
   "version": "1.0.0",
   "description": "\"Practice project Chapitre 2 - Aggregation with MongoDB\"",
-  "main": "index.js",
+  "main": "census.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
