@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 const citiesModel = require("./models/citiesModel");
 
+//  cities collection
 const cities = [
   { department: 75, city: "Paris", population: 2175601 },
   { department: 13, city: "Marseille", population: 868277 },
@@ -108,6 +109,7 @@ const cities = [
 
 // console.log(cities);
 
+// Enregistrement du tableau 'cities' dans la collection
 citiesModel
   .create(cities)
   .then((response) => {
@@ -117,22 +119,34 @@ citiesModel
     console.error(error);
   });
 
-console.log(cities);
+// console.log(cities);
 
-citiesModel.aggregate().group({
-  _id: "$department",
-  totalDepartment: { $sum: "$population" },
-});
+// Affiche la population totale par département
+// citiesModel.aggregate().group({
+//   _id: "$department",
+//   totalDepartment: { $sum: "$population" },
+// });
 
-console.log();
+// console.log("Population totale");
 
+// Affiche la population moyenne par département
+citiesModel
+  .aggregate()
+  .group({
+    _id: "$departement",
+    moyenneDepartment: { $avg: "$population" },
+  })
+  .then(console.log)
+  .catch(console.error);
+
+// Connection à MongoDB Compass
 mongoose.connect("mongodb://localhost:27017/city", (error) => {
   if (error) {
     console.error(error); // Afficher l'erreur de MongoDB en cas de problème
     process.exit(1); // Quitte l'application en cas d'erreur
   }
   console.log("MongoDB connected Successfully");
-}); // <demo> est le nom de notre databse
+}); // city est le nom de notre databse
 
 server.listen(3000, () => {
   console.log(`Nodejs server started on port ${3000}`);
