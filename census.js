@@ -110,32 +110,37 @@ const cities = [
 // console.log(cities);
 
 // Enregistrement du tableau 'cities' dans la collection
-citiesModel
-  .create(cities)
-  .then((response) => {
-    console.log(response);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+// citiesModel
+//   .create(cities)
+//   .then((response) => {
+//     console.log(response);
+//   })
+//   .catch((error) => {
+//     console.error(error);
+//   });
 
 // console.log(cities);
 
 // Affiche la population totale par département
-// citiesModel.aggregate().group({
-//   _id: "$department",
-//   totalDepartment: { $sum: "$population" },
-// });
-
-// console.log("Population totale");
-
-// Affiche la population moyenne par département
 citiesModel
   .aggregate()
-  .group({
-    _id: "$departement",
-    moyenneDepartment: { $avg: "$population" },
+  .match({
+    city: /^p/i,
+    // autre possibilité de filtre avec $regex et $option
   })
+  .group({
+    _id: "$department",
+    totalDepartment: {
+      $sum: "$population",
+    },
+    moyenneDepartment: {
+      $avg: "$population",
+    }, // Affiche la population moyenne par département
+    cities: {
+      $sum: 1,
+    },
+  })
+  .sort({ totalDepartment })
   .then(console.log)
   .catch(console.error);
 
