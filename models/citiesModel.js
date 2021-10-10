@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Schema de city (cities)
 const cityModel = new mongoose.Schema({
   department: Number,
   city: {
@@ -9,4 +10,5 @@ const cityModel = new mongoose.Schema({
   population: Number,
 });
 
+// Export du model City
 module.exports = mongoose.model("City", cityModel); // City => cities dans la db

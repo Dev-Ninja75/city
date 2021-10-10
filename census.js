@@ -2,6 +2,7 @@ const http = require("http");
 const server = http.createServer();
 const mongoose = require("mongoose");
 
+// Importation du model cities
 const citiesModel = require("./models/citiesModel");
 
 //  cities collection
@@ -109,38 +110,55 @@ const cities = [
 
 // console.log(cities);
 
-// Enregistrement du tableau 'cities' dans la collection
-// citiesModel
-//   .create(cities)
-//   .then((response) => {
-//     console.log(response);
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
+// création er enregistrement du tableau 'cities' dans la collection
+citiesModel
+  .create(cities)
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 
-// console.log(cities);
+console.log(cities);
 
-// Affiche la population totale par département
+// Aggrégation : filtre et affiche la population totale par département
 citiesModel
   .aggregate()
   .match({
+    // Filtrer
     city: /^p/i,
-    // autre possibilité de filtre avec $regex et $option
   })
+
+  // Autre possibilité de filtre avec $regex et $option
+
+  // cityModel.aggregate()
+  // .match({ // Filtrer
+  //     city: {
+  //         $regex: '^p',
+  //         $options: 'i'
+  //     }
+  // })
+
   .group({
-    _id: "$department",
+    // Regrouper
+    _id: "$department", // Paramètre de référence: department
     totalDepartment: {
+      // Nombre de la population totale par département
       $sum: "$population",
     },
     moyenneDepartment: {
       $avg: "$population",
     }, // Affiche la population moyenne par département
     cities: {
+      // Nombre des villes par département
       $sum: 1,
     },
   })
-  .sort({ totalDepartment })
+  .sort(
+    // Trier
+    { totalDepartment: 1 }
+  ) // Tri ascendant par population totale des département
   .then(console.log)
   .catch(console.error);
 
@@ -151,8 +169,9 @@ mongoose.connect("mongodb://localhost:27017/city", (error) => {
     process.exit(1); // Quitte l'application en cas d'erreur
   }
   console.log("MongoDB connected Successfully");
-}); // city est le nom de notre databse
+}); // city est le nom de ma databse
 
+// Ouverture du serveur sur le port 3000
 server.listen(3000, () => {
   console.log(`Nodejs server started on port ${3000}`);
 });
